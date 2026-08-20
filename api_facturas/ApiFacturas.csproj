@@ -34,6 +34,9 @@
     <!-- v4: Microsoft.Data.SqlClient — el cliente oficial de SQL Server
          (las mismas ideas de Npgsql: Connection/Command/Reader). -->
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+    <!-- v5: MySqlConnector — el proveedor ADO.NET de MariaDB/MySQL
+         (mismas ideas: Connection/Command/Reader). -->
+    <PackageReference Include="MySqlConnector" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -36,6 +36,8 @@ var cadenaPostgres = builder.Configuration.GetConnectionString("Postgres")
     ?? throw new InvalidOperationException("Falta la cadena de conexión 'Postgres'.");
 var cadenaSqlServer = builder.Configuration.GetConnectionString("SqlServer")
     ?? throw new InvalidOperationException("Falta la cadena de conexión 'SqlServer'.");
+var cadenaMariaDb = builder.Configuration.GetConnectionString("MariaDb")
+    ?? throw new InvalidOperationException("Falta la cadena de conexión 'MariaDb'.");
 
 // v4 — EL ÚNICO PUNTO DEL CÓDIGO QUE DECIDE EL MOTOR. La clave 'Motor'
 // la fija el compose (interruptor MOTOR_BD, default postgres — el motor
@@ -45,8 +47,10 @@ IFabricaRepositorios fabrica = motor switch
 {
     "postgres" => new FabricaPostgres(cadenaPostgres),
     "sqlserver" => new FabricaSqlServer(cadenaSqlServer),
+    // v5 — el tercer motor: ESTE case es todo lo que costó agregarlo:
+    "mariadb" => new FabricaMariaDb(cadenaMariaDb),
     _ => throw new InvalidOperationException(
-        $"Motor desconocido: '{motor}' (use postgres o sqlserver)."),
+        $"Motor desconocido: '{motor}' (use postgres, sqlserver o mariadb)."),
 };
 
 // AddScoped = "una instancia por petición HTTP" (cada request estrena la suya):
@@ -139,9 +143,9 @@ app.UseSwaggerUI();
 app.MapGet("/", () => Results.Json(new
 {
     mensaje = "API Facturas funcionando",
-    version = "v4",
+    version = "v5",
     motor,      // v4: a cuál motor le está hablando la API (el interruptor)
-    contratos = "docs/spec_kit/versiones/v4_sqlserver/6_contracts.md"
+    contratos = "docs/spec_kit/versiones/v5_mariadb/6_contracts.md"
 }));
 
 // MapControllers enciende las rutas declaradas con atributos en los

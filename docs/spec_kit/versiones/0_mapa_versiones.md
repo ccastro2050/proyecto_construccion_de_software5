@@ -10,7 +10,7 @@
 | v2 | Más entidades (persona, factura maestro-detalle…) aprovechando los triggers y SPs de la BD | Sin especificar |
 | **v3** | **El resto de las entidades** contra PostgreSQL: empresa, cliente, vendedor, usuario (contraseña con **BCrypt** + verificar-contrasena), rol, ruta y las tablas puente rol_usuario y rutarol — TODA la bdfacturas cubierta con UN motor antes de cambiar de motor | **Cerrada** — tag `v3` ([spec](v3_resto_entidades/2_spec.md)) |
 | **v4** | Segundo motor (**SQL Server**): la MISMA bdfacturas en dialecto T-SQL, los 11 repositorios SqlClient, la **fábrica de repositorios** (el motor se decide en UN punto), el interruptor `MOTOR_BD` y el contenedor **sqlserver-init** (la lección prometida en v1) — cero endpoints nuevos | **Cerrada** — tag `v4` ([spec](v4_sqlserver/2_spec.md)) |
-| v5 | Tercer motor (**MariaDB**) + compose completo | Sin especificar |
+| **v5** | Tercer motor (**MariaDB**): la MISMA bdfacturas (se siembra sola, como PostgreSQL), los 11 repositorios MySqlConnector, y la cuenta de la fábrica pagada por segunda vez — UNA clase y UN case | **En curso** ([spec](v5_mariadb/2_spec.md)) |
 | v6 | **API genérica de plataforma**: CRUD sobre CUALQUIER tabla (`/api/{tabla}` con filas como diccionario columna→valor descubierto en runtime), selección de motor por configuración, **autenticación JWT**, encriptación BCrypt de campos, consultas SELECT parametrizadas, ejecución de **procedimientos almacenados** y exploración de estructuras de la BD | Sin especificar |
 | v7 | Frontend **Flask + Jinja2**: CRUD de las 12 entidades (una página por tabla), **login y control de acceso con JWT**, selects de llaves foráneas, y la **facturación maestro-detalle** usando los procedimientos almacenados | Sin especificar |
 

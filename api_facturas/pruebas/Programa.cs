@@ -101,6 +101,12 @@ Verificar(fabricaSql.CrearRepositorioProducto() is RepositorioProductoSqlServer,
 Verificar(fabricaSql.CrearRepositorioFactura() is RepositorioFacturaSqlServer, "fábrica sqlserver: factura del dialecto correcto");
 Verificar(fabricaSql.CrearRepositorioUsuario() is RepositorioUsuarioSqlServer, "fábrica sqlserver: usuario del dialecto correcto");
 
+// v5 — el tercer motor en la fábrica:
+IFabricaRepositorios fabricaMaria = new FabricaMariaDb("Server=inexistente");
+Verificar(fabricaMaria.CrearRepositorioProducto() is RepositorioProductoMariaDb, "fábrica mariadb: producto del dialecto correcto");
+Verificar(fabricaMaria.CrearRepositorioFactura() is RepositorioFacturaMariaDb, "fábrica mariadb: factura del dialecto correcto");
+Verificar(fabricaMaria.CrearRepositorioUsuario() is RepositorioUsuarioMariaDb, "fábrica mariadb: usuario del dialecto correcto");
+
 Console.WriteLine("CRITERIO 5 OK: cada fábrica entrega los repositorios de su motor, sin abrir conexiones");
 
 // Mini-verificador (función local): si la condición es falsa, reporta

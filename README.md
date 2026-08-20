@@ -43,6 +43,7 @@ completa en PostgreSQL) y la API:
 | Listar productos | http://localhost:8042/api/producto |
 | PostgreSQL (para SQLTools/pgAdmin, opcional) | `localhost:15442` · `postgres`/`Construccion123!` |
 | SQL Server (opcional — v4) | `localhost,11442` · `sa`/`Construccion123!` |
+| MariaDB (opcional — v5) | `localhost:13342` · `root`/`Construccion123!` |
 
 Pruebe la joya didáctica de la v1: PUT con solo `{"stock": 99}` → 422; el
 mismo body en PATCH → 200. Esa diferencia es parte de lo que enseña la
@@ -78,7 +79,7 @@ es **reconstruirla usted mismo, en una carpeta propia (fuera del clon)**,
 siguiendo las especificaciones — con o sin ayuda de IA:
 
 > 🤖 ¿Va a trabajar con IA? Siga la **[Guía para construir la versión con
-> IA](docs/spec_kit/versiones/v4_sqlserver/GUIA_IA4.md)** — cubre los dos caminos con su prompt exacto listo
+> IA](docs/spec_kit/versiones/v5_mariadb/GUIA_IA5.md)** — cubre los dos caminos con su prompt exacto listo
 > para copiar: **chat web** (Gemini, DeepSeek, ChatGPT: qué archivos
 > subirle) e **IDE agéntico** (Antigravity, Cursor, Claude Code: cómo
 > supervisar al agente).
@@ -159,8 +160,8 @@ v2  persona (el molde replicado) + factura maestro-detalle con SPs   (cerrada: t
 v3  el RESTO de las entidades: toda la bdfacturas cubierta con
     UN motor (usuario con BCrypt, tablas puente)   (cerrada: tag v3)
 v4  segundo motor (SQL Server) — nace la fábrica de
-    repositorios y el interruptor MOTOR_BD   ← USTED ESTÁ AQUÍ
-v5  tercer motor (MariaDB) + compose completo
+    repositorios y el interruptor MOTOR_BD   (cerrada: tag v4)
+v5  tercer motor (MariaDB) + compose completo   ← USTED ESTÁ AQUÍ
 v6  API GENÉRICA de plataforma: /api/{tabla} multi-motor + JWT +
     consultas parametrizadas + procedimientos almacenados
 v7  frontend FLASK (Jinja2): CRUD de las 12 entidades + login + facturación
@@ -171,18 +172,18 @@ su propia spec, y una versión está TERMINADA solo cuando pasa sus criterios
 de aceptación (commit + tag). Mapa completo:
 [docs/spec_kit/versiones/0_mapa_versiones.md](docs/spec_kit/versiones/0_mapa_versiones.md).
 
-## 4. Las especificaciones de la versión actual (v4)
+## 4. Las especificaciones de la versión actual (v5)
 
 | Documento | Contenido |
 |---|---|
 | [1_constitution.md](docs/spec_kit/1_constitution.md) | Las reglas permanentes del proyecto |
-| [2_spec.md](docs/spec_kit/versiones/v4_sqlserver/2_spec.md) | QUÉ construir y los criterios de aceptación |
-| [3_plan.md](docs/spec_kit/versiones/v4_sqlserver/3_plan.md) | CÓMO: stack, estructura y diseño de las capas |
-| [4_research.md](docs/spec_kit/versiones/v4_sqlserver/4_research.md) | Decisiones y alternativas (el porqué) |
-| [5_data_model.md](docs/spec_kit/versiones/v4_sqlserver/5_data_model.md) | La BD completa (dada) y la tabla producto |
-| [6_contracts.md](docs/spec_kit/versiones/v4_sqlserver/6_contracts.md) | Los 7 endpoints con formatos exactos |
-| [7_quickstart.md](docs/spec_kit/versiones/v4_sqlserver/7_quickstart.md) | Arranque y smoke test |
-| [8_tasks.md](docs/spec_kit/versiones/v4_sqlserver/8_tasks.md) | Orden de construcción por fases verificables |
+| [2_spec.md](docs/spec_kit/versiones/v5_mariadb/2_spec.md) | QUÉ construir y los criterios de aceptación |
+| [3_plan.md](docs/spec_kit/versiones/v5_mariadb/3_plan.md) | CÓMO: stack, estructura y diseño de las capas |
+| [4_research.md](docs/spec_kit/versiones/v5_mariadb/4_research.md) | Decisiones y alternativas (el porqué) |
+| [5_data_model.md](docs/spec_kit/versiones/v5_mariadb/5_data_model.md) | La BD completa (dada) y la tabla producto |
+| [6_contracts.md](docs/spec_kit/versiones/v5_mariadb/6_contracts.md) | Los 7 endpoints con formatos exactos |
+| [7_quickstart.md](docs/spec_kit/versiones/v5_mariadb/7_quickstart.md) | Arranque y smoke test |
+| [8_tasks.md](docs/spec_kit/versiones/v5_mariadb/8_tasks.md) | Orden de construcción por fases verificables |
 
 ## 5. Material conceptual del curso
 
