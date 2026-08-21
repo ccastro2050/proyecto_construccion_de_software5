@@ -1,7 +1,15 @@
-// RepositorioClienteMariaDb — la capa de DATOS de cliente (v5).
-// CALCADO de RepositorioProductoPostgres: ADO.NET, SQL parametrizado, async.
+// ============================================================
+// RepositorioClienteMariaDb — la capa de DATOS de el cliente.
+//
+// SQL escrito A MANO y SIEMPRE parametrizado; DAPPER como
+// micro-ejecutor: QueryAsync<T> mapea columna→propiedad por nombre
+// y ExecuteAsync devuelve filas afectadas — sin Entity Framework:
+// nada genera SQL por nosotros (constitución, Art. 2).
+// Dialecto MariaDB: LIMIT @limite al final del SELECT.
+// ============================================================
 
 using ApiFacturas.Modelos;
+using Dapper;
 using MySqlConnector;
 
 namespace ApiFacturas.Repositorios;
@@ -15,79 +23,59 @@ public class RepositorioClienteMariaDb : IRepositorioCliente
         _cadenaConexion = cadenaConexion;
     }
 
-    private async Task<MySqlConnection> AbrirConexionAsync()
-    {
-        var conexion = new MySqlConnection(_cadenaConexion);
-        await conexion.OpenAsync();
-        return conexion;
-    }
-
-    private static Cliente Armar(MySqlDataReader lector)
-    {
-        return new Cliente
-        {
-            Id = lector.GetInt32(0),
-            Credito = lector.GetDecimal(1),
-            Fkcodpersona = lector.GetString(2),
-            Fkcodempresa = lector.IsDBNull(3) ? null : lector.GetString(3),
-        };
-    }
+    /// <summary>Conexión cerrada: Dapper la abre y cierra por operación;
+    /// el "await using" del llamador la libera aunque haya error.</summary>
+    private MySqlConnection CrearConexion() => new(_cadenaConexion);
 
     public async Task<List<Cliente>> ObtenerTodosAsync(int limite)
     {
         const string sql = @"SELECT id, credito, fkcodpersona, fkcodempresa
                              FROM cliente ORDER BY id LIMIT @limite";
-        await using var conexion = await AbrirConexionAsync();
-        await using var comando = new MySqlCommand(sql, conexion);
-        comando.Parameters.AddWithValue("@limite", limite);
-        await using var lector = await comando.ExecuteReaderAsync();
-        var lista = new List<Cliente>();
-        while (await lector.ReadAsync()) { lista.Add(Armar(lector)); }
-        return lista;
+        await using var conexion = CrearConexion();
+        var filas = await conexion.QueryAsync<Cliente>(sql, new { limite });
+        return filas.ToList();
     }
 
     public async Task<Cliente?> ObtenerPorIdAsync(int id)
     {
-        const string sql = @"SELECT id, credito, fkcodpersona, fkcodempresa FROM cliente WHERE id = @id";
-        await using var conexion = await AbrirConexionAsync();
-        await using var comando = new MySqlCommand(sql, conexion);
-        comando.Parameters.AddWithValue("@id", id);
-        await using var lector = await comando.ExecuteReaderAsync();
-        if (await lector.ReadAsync()) { return Armar(lector); }
-        return null;
+        const string sql = @"SELECT id, credito, fkcodpersona, fkcodempresa
+                             FROM cliente WHERE id = @id";
+        await using var conexion = CrearConexion();
+        // Una fila → el modelo; cero filas → null (el SERVICIO decide qué
+        // significa ese null — aquí solo hay hechos):
+        return await conexion.QueryFirstOrDefaultAsync<Cliente>(sql, new { id });
     }
 
     public async Task CrearAsync(Cliente entidad)
     {
+        // Fkcodempresa puede venir null: Dapper lo envía como NULL (el
+        // opcional del contrato); el default de credito ya lo puso el servicio.
         const string sql = @"INSERT INTO cliente (credito, fkcodpersona, fkcodempresa)
-                             VALUES (@credito, @fkcodpersona, @fkcodempresa)";
-        await using var conexion = await AbrirConexionAsync();
-        await using var comando = new MySqlCommand(sql, conexion);
-        comando.Parameters.AddWithValue("@credito", entidad.Credito);
-        comando.Parameters.AddWithValue("@fkcodpersona", entidad.Fkcodpersona);
-        comando.Parameters.AddWithValue("@fkcodempresa", (object?)entidad.Fkcodempresa ?? DBNull.Value);
-        await comando.ExecuteNonQueryAsync();
+                             VALUES (@Credito, @Fkcodpersona, @Fkcodempresa)";
+        await using var conexion = CrearConexion();
+        // El OBJETO del modelo como fuente de parámetros (@Propiedad):
+        await conexion.ExecuteAsync(sql, entidad);
     }
 
     public async Task<int> ActualizarAsync(int id, Dictionary<string, object> datos)
     {
-        // SET dinámico con lista blanca (los nombres salen de las PETICIONES):
-        var asignaciones = new List<string>();
-        foreach (var columna in datos.Keys) { asignaciones.Add($"{columna} = @{columna}"); }
-        var sql = $"UPDATE cliente SET {string.Join(", ", asignaciones)} WHERE id = @pk_clave";
-        await using var conexion = await AbrirConexionAsync();
-        await using var comando = new MySqlCommand(sql, conexion);
-        foreach (var (columna, valor) in datos) { comando.Parameters.AddWithValue($"@{columna}", valor); }
-        comando.Parameters.AddWithValue("@pk_clave", id);
-        return await comando.ExecuteNonQueryAsync();
+        // SET dinámico SOLO con las columnas que llegaron (PUT manda todas,
+        // PATCH un subconjunto). Los NOMBRES salen de las PETICIONES (lista
+        // blanca) — jamás del cliente; los VALORES van parametrizados:
+        var asignaciones = string.Join(", ", datos.Keys.Select(c => $"{c} = @{c}"));
+        var sql = $"UPDATE cliente SET {asignaciones} WHERE id = @pk_clave";
+        var parametros = new DynamicParameters(datos);
+        parametros.Add("pk_clave", id);
+        await using var conexion = CrearConexion();
+        // ExecuteAsync devuelve las FILAS AFECTADAS (0 = no existía):
+        return await conexion.ExecuteAsync(sql, parametros);
     }
 
     public async Task<int> EliminarAsync(int id)
     {
+        // Si otras tablas lo referencian, la FK del motor rechaza → 500:
         const string sql = "DELETE FROM cliente WHERE id = @id";
-        await using var conexion = await AbrirConexionAsync();
-        await using var comando = new MySqlCommand(sql, conexion);
-        comando.Parameters.AddWithValue("@id", id);
-        return await comando.ExecuteNonQueryAsync();
+        await using var conexion = CrearConexion();
+        return await conexion.ExecuteAsync(sql, new { id });
     }
 }

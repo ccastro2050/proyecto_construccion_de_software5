@@ -1,8 +1,14 @@
-// RepositorioRutaRolMariaDb — la capa de DATOS del puente rutarol (v5).
+// ============================================================
+// RepositorioRutaRolMariaDb — la capa de DATOS del puente rutarol.
+//
+// SQL a mano + DAPPER como micro-ejecutor (constitución, Art. 2).
 // El DELETE filtra por LAS DOS columnas: borra una pareja exacta,
-// nunca "todo lo del usuario/la ruta" (regla dura de la spec).
+// nunca "todo lo del lado A o B" (regla dura de la spec).
+// Dialecto MariaDB: LIMIT @limite al final del SELECT.
+// ============================================================
 
 using ApiFacturas.Modelos;
+using Dapper;
 using MySqlConnector;
 
 namespace ApiFacturas.Repositorios;
@@ -16,73 +22,42 @@ public class RepositorioRutaRolMariaDb : IRepositorioRutaRol
         _cadenaConexion = cadenaConexion;
     }
 
-    private async Task<MySqlConnection> AbrirConexionAsync()
+    private MySqlConnection CrearConexion() => new(_cadenaConexion);
+
+    public async Task<List<RutaRol>> ObtenerTodosAsync(int limite)
     {
-        var conexion = new MySqlConnection(_cadenaConexion);
-        await conexion.OpenAsync();
-        return conexion;
+        const string sql = @"SELECT fkidruta, fkidrol FROM rutarol ORDER BY fkidruta, fkidrol LIMIT @limite";
+        await using var conexion = CrearConexion();
+        return (await conexion.QueryAsync<RutaRol>(sql, new { limite })).ToList();
     }
 
-    private static RutaRol Armar(MySqlDataReader lector)
+    public async Task<List<RutaRol>> ObtenerPorRutaAsync(int fkidruta)
     {
-        return new RutaRol
-        {
-            Fkidruta = lector.GetInt32(0),
-            Fkidrol = lector.GetInt32(1),
-        };
+        const string sql = @"SELECT fkidruta, fkidrol FROM rutarol WHERE fkidruta = @fkidruta";
+        await using var conexion = CrearConexion();
+        return (await conexion.QueryAsync<RutaRol>(sql, new { fkidruta })).ToList();
     }
 
-    private async Task<List<RutaRol>> ConsultarAsync(string sql, Action<MySqlParameterCollection> configurar)
+    public async Task<List<RutaRol>> ObtenerPorRolAsync(int fkidrol)
     {
-        await using var conexion = await AbrirConexionAsync();
-        await using var comando = new MySqlCommand(sql, conexion);
-        configurar(comando.Parameters);
-        await using var lector = await comando.ExecuteReaderAsync();
-        var lista = new List<RutaRol>();
-        while (await lector.ReadAsync()) { lista.Add(Armar(lector)); }
-        return lista;
-    }
-
-    public Task<List<RutaRol>> ObtenerTodosAsync(int limite)
-    {
-        return ConsultarAsync(
-            @"SELECT fkidruta, fkidrol FROM rutarol ORDER BY fkidruta, fkidrol LIMIT @limite",
-            p => p.AddWithValue("@limite", limite));
-    }
-
-    public Task<List<RutaRol>> ObtenerPorRutaAsync(int fkidruta)
-    {
-        return ConsultarAsync(
-            @"SELECT fkidruta, fkidrol FROM rutarol WHERE fkidruta = @a",
-            p => p.AddWithValue("@a", fkidruta));
-    }
-
-    public Task<List<RutaRol>> ObtenerPorRolAsync(int fkidrol)
-    {
-        return ConsultarAsync(
-            @"SELECT fkidruta, fkidrol FROM rutarol WHERE fkidrol = @b",
-            p => p.AddWithValue("@b", fkidrol));
+        const string sql = @"SELECT fkidruta, fkidrol FROM rutarol WHERE fkidrol = @fkidrol";
+        await using var conexion = CrearConexion();
+        return (await conexion.QueryAsync<RutaRol>(sql, new { fkidrol })).ToList();
     }
 
     public async Task CrearAsync(RutaRol asignacion)
     {
-        const string sql = @"INSERT INTO rutarol (fkidruta, fkidrol) VALUES (@a, @b)";
-        await using var conexion = await AbrirConexionAsync();
-        await using var comando = new MySqlCommand(sql, conexion);
-        comando.Parameters.AddWithValue("@a", asignacion.Fkidruta);
-        comando.Parameters.AddWithValue("@b", asignacion.Fkidrol);
-        // Duplicado → viola la PK compuesta → MySqlException → 500:
-        await comando.ExecuteNonQueryAsync();
+        // Duplicado → viola la PK compuesta → excepción del motor → 500:
+        const string sql = @"INSERT INTO rutarol (fkidruta, fkidrol) VALUES (@Fkidruta, @Fkidrol)";
+        await using var conexion = CrearConexion();
+        await conexion.ExecuteAsync(sql, asignacion);
     }
 
     public async Task<int> EliminarAsync(int fkidruta, int fkidrol)
     {
         // LA PAREJA EXACTA: las dos columnas en el WHERE.
-        const string sql = @"DELETE FROM rutarol WHERE fkidruta = @a AND fkidrol = @b";
-        await using var conexion = await AbrirConexionAsync();
-        await using var comando = new MySqlCommand(sql, conexion);
-        comando.Parameters.AddWithValue("@a", fkidruta);
-        comando.Parameters.AddWithValue("@b", fkidrol);
-        return await comando.ExecuteNonQueryAsync();
+        const string sql = @"DELETE FROM rutarol WHERE fkidruta = @fkidruta AND fkidrol = @fkidrol";
+        await using var conexion = CrearConexion();
+        return await conexion.ExecuteAsync(sql, new { fkidruta, fkidrol });
     }
 }
