@@ -22,18 +22,18 @@ Al final: `postgres` (healthy), `sqlserver` (healthy), `sqlserver-init`
 ## 2. La regresión TRIPLE (criterios 1-3 — el corazón de la v5)
 
 ```powershell
-curl.exe http://localhost:8042/     # → "version":"v5", "motor":"postgres"
+curl.exe http://localhost:8046/     # → "version":"v5", "motor":"postgres"
 # → smoke tests COMPLETOS de v1 §2, v2 §3 y v3 §3: pasan tal cual
 
 $env:MOTOR_BD = "sqlserver"
 docker compose up -d api-facturas
-curl.exe http://localhost:8042/     # → "motor":"sqlserver"
+curl.exe http://localhost:8046/     # → "motor":"sqlserver"
 # → la MISMA regresión completa: pasa igual
 # (para el estado semilla exacto entre motores: docker compose down -v && up -d)
 
 $env:MOTOR_BD = "mariadb"
 docker compose up -d api-facturas
-curl.exe http://localhost:8042/     # → "motor":"mariadb"
+curl.exe http://localhost:8046/     # → "motor":"mariadb"
 # → la MISMA regresión completa, tercera vez. Ni una línea de código
 #   cambió entre las tres pasadas: ESO es Liskov entre repositorios.
 
@@ -44,8 +44,8 @@ docker compose up -d api-facturas
 ## 3. Los errores de negocio en el motor nuevo (criterio 3)
 
 ```powershell
-curl.exe -i http://localhost:8042/api/factura/999                 # → 404 (SIGNAL 1644 traducido)
-curl.exe -i -X POST http://localhost:8042/api/factura -H "Content-Type: application/json" -d "{\"fkidcliente\":1,\"fkidvendedor\":1,\"productos\":[{\"codigo\":\"PR001\",\"cantidad\":9999}]}"   # → 500 "Stock insuficiente…"
+curl.exe -i http://localhost:8046/api/factura/999                 # → 404 (SIGNAL 1644 traducido)
+curl.exe -i -X POST http://localhost:8046/api/factura -H "Content-Type: application/json" -d "{\"fkidcliente\":1,\"fkidvendedor\":1,\"productos\":[{\"codigo\":\"PR001\",\"cantidad\":9999}]}"   # → 500 "Stock insuficiente…"
 # (anule dos veces cualquier factura suya: la segunda → 409)
 ```
 
@@ -71,7 +71,7 @@ docker compose exec api-facturas dotnet run --project pruebas
 | Síntoma | Causa probable |
 |---|---|
 | Los de v1/v2/v3/v4 | Aplican todos igual (sus quickstarts) |
-| `mariadb` no queda healthy | Puerto 13342 ocupado, o volumen de un intento fallido: `docker compose down -v` y de nuevo |
+| `mariadb` no queda healthy | Puerto 13346 ocupado, o volumen de un intento fallido: `docker compose down -v` y de nuevo |
 | Todo 500 con `motor=mariadb` | ¿El script corrió? Solo se auto-ejecuta con el volumen VACÍO — `docker compose down -v && up -d` |
 | "Parameter '@salida'…" o error de variables | La cadena de MariaDB perdió `AllowUserVariables=True` — [3_plan.md](3_plan.md) §3 |
 | Factura da 500 en vez de 404/409 en mariadb | El repositorio no está filtrando 1644 + patrón — [3_plan.md](3_plan.md) §3 |

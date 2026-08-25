@@ -2,9 +2,9 @@
 # Proyecto Construcción de Software — versión 5:
 # api_facturas (C#/ASP.NET Core) + TRES motores con la misma BD
 #
-#                                 ┌→ PostgreSQL (bdfacturas, :15442)
-#   Navegador → API (C#, :8042) ─┼→ SQL Server (bdfacturas, :11442)
-#                                 └→ MariaDB   (bdfacturas, :13342)
+#                                 ┌→ PostgreSQL (bdfacturas, :15446)
+#   Navegador → API (C#, :8046) ─┼→ SQL Server (bdfacturas, :11446)
+#                                 └→ MariaDB   (bdfacturas, :13346)
 #                                      el interruptor: MOTOR_BD
 #
 # Uso: docker compose up -d --build     (UN solo comando)
@@ -31,7 +31,7 @@ services:
       # necesita contenedor inicializador:
       - ./db/bdfacturas_postgres.sql:/docker-entrypoint-initdb.d/bdfacturas_postgres.sql:ro
     ports:
-      - "15442:5432"     # puerto en su PC (para SQLTools/pgAdmin opcional)
+      - "15446:5432"     # puerto en su PC (para SQLTools/pgAdmin opcional)
     healthcheck:
       # ¿La BD ya RESPONDE consultas? (no solo "el contenedor existe")
       test: ["CMD-SHELL", "pg_isready -U postgres -d bdfacturas_postgres_local"]
@@ -49,7 +49,7 @@ services:
     volumes:
       - mssqldata:/var/opt/mssql
     ports:
-      - "11442:1433"     # puerto en su PC (para SQLTools/pgAdmin de SQL opcional)
+      - "11446:1433"     # puerto en su PC (para SQLTools/pgAdmin de SQL opcional)
     healthcheck:
       test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' -b"]
       interval: 10s
@@ -81,7 +81,7 @@ services:
       - mariadbdata:/var/lib/mysql
       - ./db/bdfacturas_mariadb.sql:/docker-entrypoint-initdb.d/bdfacturas_mariadb.sql:ro
     ports:
-      - "13342:3306"     # puerto en su PC (para HeidiSQL/DBeaver opcional)
+      - "13346:3306"     # puerto en su PC (para HeidiSQL/DBeaver opcional)
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
@@ -97,7 +97,7 @@ services:
       - /app/obj                 #   sin mezclarse con los compilados de Windows
     restart: unless-stopped
     ports:
-      - "8042:8042"              # http://localhost:8042
+      - "8046:8046"              # http://localhost:8046
     environment:
       # La cadena usa el NOMBRE del servicio como host (postgres:5432),
       # no localhost: dentro de la red interna de compose los servicios

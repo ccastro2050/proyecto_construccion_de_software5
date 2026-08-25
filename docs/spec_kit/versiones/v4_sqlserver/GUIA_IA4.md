@@ -16,7 +16,7 @@ con sus puertos +100). Novedad de esta versión: por primera vez cambia
 la INFRAESTRUCTURA (un motor nuevo en el compose, con inicializador) y
 NO el contrato (cero endpoints nuevos).
 
-**Sus puertos:** API 8142 · PostgreSQL 15542 · **SQL Server 11542**
+**Sus puertos:** API 8146 · PostgreSQL 15546 · **SQL Server 11546**
 (la regla +100 de siempre).
 
 ## A.1 Qué subirle al chat (los 9 de la v4)
@@ -82,7 +82,7 @@ cambiando:
   50010); BCrypt se queda en el repositorio de usuario; SQL Server NO se
   siembra solo: el contenedor sqlserver-init corre el script una vez."*
 - El ancla de stack queda igual; a los puertos +100 agregue:
-  *"SQL Server publica en 11542 (no 11442)"*.
+  *"SQL Server publica en 11546 (no 11446)"*.
 
 ## A.4 Método: igual que la v3, con dos alarmas extra
 

@@ -76,7 +76,7 @@ capas crece con la fábrica.
 
 ### RF3 — El segundo motor completo
 - Servicio `sqlserver` (SQL Server 2022, ~2 GB de RAM) en el compose,
-  puerto publicado **11442**, con healthcheck real (sqlcmd) y
+  puerto publicado **11446**, con healthcheck real (sqlcmd) y
   `start_period` de gracia.
 - **`sqlserver-init`**: SQL Server NO ejecuta scripts montados — este
   contenedor corre `db/bdfacturas_sqlserver.sql` UNA vez (idempotente) y

@@ -14,8 +14,8 @@ puertos +100). La v5 repite el ejercicio de la v4 con el TERCER motor —
 si la v4 le quedó bien, esta es la versión más corta del curso: esa
 brevedad ES la lección (la fábrica ya pagó la infraestructura).
 
-**Sus puertos:** API 8142 · PostgreSQL 15542 · SQL Server 11542 ·
-**MariaDB 13442**.
+**Sus puertos:** API 8146 · PostgreSQL 15546 · SQL Server 11546 ·
+**MariaDB 13446**.
 
 ## A.1 Qué subirle al chat
 
@@ -54,7 +54,7 @@ cualquiera (el molde del calco).
   por número 1644 + patrón. La cadena lleva AllowUserVariables=True.
   NO toques Controllers/, Servicios/, Peticiones/, Modelos/,
   Excepciones/ ni IFabricaRepositorios."*
-- Puertos +100: *"MariaDB publica en 13442 (no 13342)"*.
+- Puertos +100: *"MariaDB publica en 13446 (no 13346)"*.
 
 ## A.4 La alarma de siempre
 

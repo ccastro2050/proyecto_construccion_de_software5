@@ -23,7 +23,7 @@ inicializador, prometida desde la v1)** y `api-facturas` arriba.
 ### 2a. TODO contra PostgreSQL (el motor por defecto)
 
 ```powershell
-curl.exe http://localhost:8042/     # → "version":"v4", "motor":"postgres"
+curl.exe http://localhost:8046/     # → "version":"v4", "motor":"postgres"
 ```
 
 Correr COMPLETOS los smoke tests de la
@@ -36,7 +36,7 @@ Correr COMPLETOS los smoke tests de la
 ```powershell
 $env:MOTOR_BD = "sqlserver"
 docker compose up -d api-facturas       # recrea SOLO la API (segundos)
-curl.exe http://localhost:8042/         # → "motor":"sqlserver"
+curl.exe http://localhost:8046/         # → "motor":"sqlserver"
 ```
 
 Correr la MISMA regresión completa. Pasa igual — mismos ids, mismos
@@ -57,8 +57,8 @@ docker compose up -d api-facturas
 ## 3. Los errores de negocio en el motor nuevo (criterio 3)
 
 ```powershell
-curl.exe -i http://localhost:8042/api/factura/999                 # → 404 (THROW 50003 traducido)
-curl.exe -i -X POST http://localhost:8042/api/factura -H "Content-Type: application/json" -d "{\"fkidcliente\":1,\"fkidvendedor\":1,\"productos\":[{\"codigo\":\"PR001\",\"cantidad\":9999}]}"   # → 500 "Stock insuficiente…"
+curl.exe -i http://localhost:8046/api/factura/999                 # → 404 (THROW 50003 traducido)
+curl.exe -i -X POST http://localhost:8046/api/factura -H "Content-Type: application/json" -d "{\"fkidcliente\":1,\"fkidvendedor\":1,\"productos\":[{\"codigo\":\"PR001\",\"cantidad\":9999}]}"   # → 500 "Stock insuficiente…"
 # (anule dos veces cualquier factura suya: la segunda → 409, THROW 50010)
 ```
 

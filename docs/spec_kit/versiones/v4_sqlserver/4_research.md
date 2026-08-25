@@ -61,12 +61,12 @@ El default conserva el comportamiento de v1-v3 (la regresión corre
 idéntica sin tocar nada) y el interruptor estrena el motor nuevo. El
 default vive en el compose (`${MOTOR_BD:-postgres}`), no en el código.
 
-## D7 — Puerto 11442
+## D7 — Puerto 11446
 
-Mapa de puertos: la familia de este curso termina en 42 (API 8042,
-PostgreSQL 15442) — SQL Server toma **11442** (libre entre los 114xx ya
+Mapa de puertos: la familia de este curso termina en 42 (API 8046,
+PostgreSQL 15446) — SQL Server toma **11446** (libre entre los 114xx ya
 usados por otros cursos: 11463, 11563, 11432). La reconstrucción del
-estudiante suma 100: **11542**.
+estudiante suma 100: **11546**.
 
 ## D8 — Semillas idénticas, ids idénticos
 

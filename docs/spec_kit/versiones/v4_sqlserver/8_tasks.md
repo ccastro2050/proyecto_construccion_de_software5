@@ -16,7 +16,7 @@
 
 - [ ] `db/bdfacturas_sqlserver.sql` (cópielo del proyecto del curso — es
       dato, no código a generar) e `db/init_sqlserver.sh`.
-- [ ] `docker-compose.yml`: servicios `sqlserver` (2022, :11442,
+- [ ] `docker-compose.yml`: servicios `sqlserver` (2022, :11446,
       healthcheck con sqlcmd y `start_period`) y `sqlserver-init`
       (entrypoint al .sh, `restart: "no"`).
 - [ ] `docker compose up -d` — la API sigue en v3 contra PostgreSQL:

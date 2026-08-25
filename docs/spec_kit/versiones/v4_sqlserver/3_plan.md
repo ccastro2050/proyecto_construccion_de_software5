@@ -33,7 +33,7 @@ db/init_sqlserver.sh                               ← el inicializador (SQL Ser
 | Archivo | Qué crece |
 |---|---|
 | `ApiFacturas.csproj` | ★ paquete **Microsoft.Data.SqlClient** |
-| `docker-compose.yml` | ★ servicios `sqlserver` (2022, :11442, healthcheck) + `sqlserver-init` + variables `Motor` y `ConnectionStrings__SqlServer` en la API |
+| `docker-compose.yml` | ★ servicios `sqlserver` (2022, :11446, healthcheck) + `sqlserver-init` + variables `Motor` y `ConnectionStrings__SqlServer` en la API |
 | `appsettings.json` | ★ cadena `SqlServer` y clave `Motor` (defaults para correr sin Docker) |
 | `Program.cs` | ★ el ensamblador se REESCRIBE alrededor de la fábrica (ver §4) + diagnóstico v4 con `motor` |
 | `pruebas/Programa.cs` | ★ criterio 5: las fábricas eligen sin conectarse |
@@ -123,8 +123,8 @@ fábrica.
   un contenedor que espera el healthcheck, corre
   `db/bdfacturas_sqlserver.sql` UNA vez (idempotente) y muere. La API
   suma `depends_on: service_completed_successfully`.
-- Puerto publicado **11442** (curso; la reconstrucción del estudiante
-  usa 11542).
+- Puerto publicado **11446** (curso; la reconstrucción del estudiante
+  usa 11546).
 - El interruptor: `Motor: ${MOTOR_BD:-postgres}` —
   `MOTOR_BD=sqlserver docker compose up -d api-facturas` recrea SOLO la
   API apuntando al motor nuevo (los DOS motores siempre están arriba).

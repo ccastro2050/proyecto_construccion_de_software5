@@ -43,11 +43,11 @@ motores que se siembran solos y uno (SQL Server) con contenedor
 inicializador. Ver los tres conviviendo en UN archivo ES la lección de
 orquestación del curso.
 
-## D5 — Puerto 13342
+## D5 — Puerto 13346
 
-La familia de este curso termina en 42: API 8042, PostgreSQL 15442,
-SQL Server 11442, **MariaDB 13342** (libre entre los 133xx/134xx de los
-otros cursos). Reconstrucción del estudiante: 13442.
+La familia de este curso termina en 42: API 8046, PostgreSQL 15446,
+SQL Server 11446, **MariaDB 13346** (libre entre los 133xx/134xx de los
+otros cursos). Reconstrucción del estudiante: 13446.
 
 ## D6 — Semillas idénticas, tercera copia
 

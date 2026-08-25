@@ -1,13 +1,13 @@
 {
   "info": {
     "name": "API Facturas v5 — Construcción de Software (C# + PostgreSQL + SQL Server + MariaDB)",
-    "description": "Acumulativa: v1 (producto, 13) + v2 (persona y factura, 12) + v3 (el resto de las entidades, 16). Las v4 y v5 NO agregan peticiones — agregan MOTORES: las 41 funcionan idénticas contra PostgreSQL (default), SQL Server o MariaDB, según el interruptor MOTOR_BD del compose. La petición 1 (diagnóstico) muestra el motor activo. {{base}}: localhost:8042 (curso) · localhost:8142 (su reconstrucción).",
+    "description": "Acumulativa: v1 (producto, 13) + v2 (persona y factura, 12) + v3 (el resto de las entidades, 16). Las v4 y v5 NO agregan peticiones — agregan MOTORES: las 41 funcionan idénticas contra PostgreSQL (default), SQL Server o MariaDB, según el interruptor MOTOR_BD del compose. La petición 1 (diagnóstico) muestra el motor activo. {{base}}: localhost:8046 (curso) · localhost:8146 (su reconstrucción).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "base",
-      "value": "http://localhost:8042"
+      "value": "http://localhost:8046"
     }
   ],
   "item": [

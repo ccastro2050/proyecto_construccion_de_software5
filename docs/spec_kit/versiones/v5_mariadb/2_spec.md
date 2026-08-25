@@ -48,7 +48,7 @@ crece con el tercer dialecto.
 ## 3. Requisitos funcionales
 
 ### RF1 — El tercer motor completo
-- `mariadb` (MariaDB 11) en el compose, puerto publicado **13342**, con
+- `mariadb` (MariaDB 11) en el compose, puerto publicado **13346**, con
   `db/bdfacturas_mariadb.sql`: las MISMAS 12 tablas y semillas (mismos
   ids, `AUTO_INCREMENT` alineado), los triggers de totales/stock y los
   SPs de factura — en dialecto MariaDB ([5_data_model](5_data_model.md)).

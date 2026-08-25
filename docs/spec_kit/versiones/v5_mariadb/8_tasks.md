@@ -9,13 +9,13 @@
 
 - [ ] La v4 corre y pasa su regresión doble (tag `v4` presente).
 
-**Verificar:** `curl http://localhost:8042/` → `"version":"v4"`.
+**Verificar:** `curl http://localhost:8046/` → `"version":"v4"`.
 
 ## Fase 1 — El motor nuevo en el compose (sin tocar la API)
 
 - [ ] `db/bdfacturas_mariadb.sql` (cópielo del proyecto del curso — es
       dato: mismas semillas o la regresión no será comparable).
-- [ ] `docker-compose.yml`: servicio `mariadb` (11, :13342, volumen
+- [ ] `docker-compose.yml`: servicio `mariadb` (11, :13346, volumen
       `mariadbdata`, script montado en `/docker-entrypoint-initdb.d/`,
       healthcheck).
 - [ ] `docker compose up -d` — la API sigue en v4: nada se rompe.

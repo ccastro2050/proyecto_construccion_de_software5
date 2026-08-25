@@ -28,7 +28,7 @@ db/bdfacturas_mariadb.sql                          ← la MISMA BD, dialecto Mar
 | Archivo | Qué crece |
 |---|---|
 | `ApiFacturas.csproj` | ★ paquete **MySqlConnector** |
-| `docker-compose.yml` | ★ servicio `mariadb` (11, :13342, se siembra solo) + `ConnectionStrings__MariaDb` |
+| `docker-compose.yml` | ★ servicio `mariadb` (11, :13346, se siembra solo) + `ConnectionStrings__MariaDb` |
 | `appsettings.json` | ★ cadena `MariaDb` (con `AllowUserVariables=True` — ver §3) |
 | `Program.cs` | ★ UN case en el switch de fábricas — la cuenta, pagada |
 | `pruebas/Programa.cs` | ★ el tercer dialecto en la prueba de la fábrica |
@@ -79,6 +79,6 @@ catch (MySqlException e) when (e.Number == 1644 && e.Message.Contains("anulada")
 - `mariadb:11` se siembra solo (como PostgreSQL): el curso cierra con un
   motor de cada especie — dos que se auto-inicializan y uno con
   contenedor inicializador.
-- Puertos publicados: 8042 (API) · 15442 (postgres) · 11442 (sqlserver)
-  · **13342 (mariadb)**. Reconstrucción del estudiante: +100 (13442).
+- Puertos publicados: 8046 (API) · 15446 (postgres) · 11446 (sqlserver)
+  · **13346 (mariadb)**. Reconstrucción del estudiante: +100 (13446).
 - El interruptor: `MOTOR_BD` ∈ {postgres, sqlserver, mariadb}.
