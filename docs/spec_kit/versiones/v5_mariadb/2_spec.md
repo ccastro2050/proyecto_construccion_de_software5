@@ -30,7 +30,7 @@ sustitución de Liskov, verificada con la MISMA batería tres veces.
 
 Con esto el compose queda COMPLETO en infraestructura de datos: las 12
 tablas de bdfacturas viven idénticas en LOS TRES motores — el terreno
-que pisará la API genérica (v6).
+que pisará el front (v6).
 
 ## 2. Alcance
 
@@ -41,7 +41,7 @@ siembra solo) · los 11 repositorios en dialecto MySqlConnector ·
 crece con el tercer dialecto.
 
 **No incluye (deliberado):**
-- La **API genérica** (v6) ni el front (v7).
+- El front (v6): es la versión siguiente.
 - Selección de motor por petición: sigue siendo UNA vez, al arrancar.
 - Cambios de contrato: ninguno.
 
@@ -79,7 +79,7 @@ crece con el tercer dialecto.
   Controllers/, Servicios/, Peticiones/, Modelos/ ni Excepciones/.
 - **RNF3 — Paridad de semillas en LOS TRES motores:** el smoke test es
   EL MISMO, tres veces.
-- **RNF4 — Sin anticipación:** nada de API genérica (v6) ni front (v7).
+- **RNF4 — Sin anticipación:** nada del front (v6).
 
 ## 5. Criterios de aceptación
 
@@ -101,4 +101,4 @@ crece con el tercer dialecto.
 
 Los 5 criterios pasan → commit + tag `v5` → la API es tri-motor y la
 infraestructura de datos está completa → recién entonces se especifica
-la v6 (la API genérica: `/api/{tabla}` sobre cualquiera de los tres).
+la v6 (el front Flask + Jinja2 sobre la API tri-motor).
